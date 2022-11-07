@@ -2,6 +2,8 @@
 from bs4 import BeautifulSoup
 from datetime import date
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 class WeatherScraper:
     '''A class which scrapes weather data using Beautiful Soup and stores data within a weather dictionary.'''
@@ -14,8 +16,22 @@ class WeatherScraper:
 
     def scrape(self): 
         '''Scrapes the weather data by targeting the daily Max, Min, and Mean temperatures for each month.'''
-        while self.previous_month is True: 
-            soup = BeautifulSoup(requests.get(self.url).content, 'html.parser')   
+        while self.previous_month is True:
+
+            # To prevent exceeding request limit during development
+            try:
+                session = requests.Session()
+                retry = Retry(connect=3, backoff_factor=1)
+                adapter = HTTPAdapter(max_retries=retry)
+                session.mount('http://', adapter)
+                session.mount('https://', adapter)
+                url = session.get(self.url)
+                soup = BeautifulSoup(url.content, 'html.parser')   
+            except requests.exceptions.ConnectionError as e:
+                print('Connection Error:', e)
+                session.close()
+                return
+            
             print(f"Scraping weather data for: {self.year}-{self.month}")
             
             if "We're sorry we were unable to satisfy your request." not in soup.find('p').text:
@@ -58,4 +74,3 @@ class WeatherScraper:
 test = WeatherScraper()
 test.scrape()
 test.print_weather_data()
-
