@@ -1,10 +1,11 @@
-from scrape_weather import WeatherScraper
-from db_operations import DbOperations
-import logging
-from appdirs import *
-import os
-import time
-import getpass
+""" Will contain the code that we need for user interaction. """
+from scrape_weather import WeatherScraper # Weather scraper
+from db_operations import DbOperations # Database controller
+
+import logging # Logging module
+from appdirs import * # Find filepaths
+import os # Needed for appdirs
+import argparse # argc/argv support
 
 appname = "weather-processing-app"
 appauthor = "Tanner/David"
@@ -42,10 +43,9 @@ try:
 except Exception as e:
     print("Error creating log file: ", e)
 
-
 test = WeatherScraper()
 db = DbOperations()
 
-test.scrape()
 db.initalize_db()
-db.fetch_data(test.weather)
+test.scrape()
+db.save_data(test.weather)

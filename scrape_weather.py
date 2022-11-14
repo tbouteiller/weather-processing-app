@@ -65,7 +65,7 @@ class WeatherScraper:
             print("Error:", e)
             log.error("Error:", e)
 
-    def check_for_previous_month(self, soup):
+    def check_for_previous_month(self, soup:object):
         '''Checks if data for previous month is available. Will update the url and rerun the soup if true.'''
         try:
             address = soup.find(rel="prev", href=True)
@@ -81,7 +81,7 @@ class WeatherScraper:
             print("Error", e)
             log.error("Error", e)
 
-    def print_weather_data(self):
+    def print_weather_data(self) -> dict:
         '''Returns a string representation of the weather dictionary.'''
         try:
             log.info(self.weather)
@@ -90,7 +90,7 @@ class WeatherScraper:
             print("Error:", e)
             log.error("Error:", e)
 
-    def set_session(self):
+    def set_session(self) -> object:
         '''Creates a session to wrap request calls to account for request failures or request limits.'''
         try:
             session = requests.Session()
@@ -104,6 +104,6 @@ class WeatherScraper:
             log.error("Error", e)
 
 # Testing things
-test = WeatherScraper()
-test.scrape()
-test.print_weather_data()
+#test = WeatherScraper()
+#test.scrape()
+#test.print_weather_data()

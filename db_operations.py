@@ -48,7 +48,7 @@ class DbOperations:
             print("Table already exists.")
             log.info("Table already exists.")
 
-    def save_data(self, weather_data):
+    def save_data(self, weather_data:dict):
         '''Saves all data from the weather table and prints each row.'''
 
         try:
@@ -97,12 +97,12 @@ class DbOperations:
             print("Error:", e)
             log.error("Error:", e)
 
-db = DbOperations()
-db.initalize_db()
+#db = DbOperations()
+#db.initalize_db()
 
 #dummy data for testing
-data = {"2023-01-01": {'Max': '3.5', 'Min': '12.8', 'Mean': '8.2'}, "2024-01-01": {'Max': '95', 'Min': '28', 'Mean': '6'}}
-db.save_data(data)
-db.fetch_data()
-db.purge_data()
-db.fetch_data()
+#data = {"2023-01-01": {'Max': '3.5', 'Min': '12.8', 'Mean': '8.2'}, "2024-01-01": {'Max': '95', 'Min': '28', 'Mean': '6'}}
+#db.save_data(data)
+#db.fetch_data()
+#db.purge_data()
+#db.fetch_data()
