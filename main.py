@@ -42,10 +42,13 @@ try:
 except Exception as e:
     print("Error creating log file: ", e)
 
-
+#Test output
 test = WeatherScraper()
 db = DbOperations()
 
 test.scrape()
 db.initalize_db()
-db.fetch_data(test.weather)
+db.purge_data()
+db.save_data(test.weather)
+db.fetch_data()
+

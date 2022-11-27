@@ -50,18 +50,17 @@ class DbOperations:
 
     def save_data(self, weather_data):
         '''Saves all data from the weather table and prints each row.'''
-
         try:
             if self.connection is not None:
                 for k, v in weather_data.items():
+                    if 'LegendMM' != v['Min'] or 'LegendMM' != v['Max'] or 'LegendMM' != v['Mean']:
+                        min = float(v['Min'])
+                        max = float(v['Max'])
+                        avg = float(v['Mean'])
+                        query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
 
-                    min = float(v['Min'])
-                    max = float(v['Max'])
-                    avg = float(v['Mean'])
-                    query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
-
-                    self.connection.execute(query)
-                    self.connection.commit()
+                        self.connection.execute(query)
+                        self.connection.commit()
                 print("Added data successfully.")
                 log.info("Added data successfully.")
 
@@ -75,7 +74,7 @@ class DbOperations:
             if self.connection is not None:
                 self.connection.executescript("""
                     delete from weather;
-                    delete from sqlite_sequence where name='weather;'
+                    delete from sqlite_sequence where name = 'weather';
                 """)
                 self.connection.commit()
                 print("Data has been purged successfully.")
@@ -96,13 +95,3 @@ class DbOperations:
         except Exception as e:
             print("Error:", e)
             log.error("Error:", e)
-
-db = DbOperations()
-db.initalize_db()
-
-#dummy data for testing
-data = {"2023-01-01": {'Max': '3.5', 'Min': '12.8', 'Mean': '8.2'}, "2024-01-01": {'Max': '95', 'Min': '28', 'Mean': '6'}}
-db.save_data(data)
-db.fetch_data()
-db.purge_data()
-db.fetch_data()

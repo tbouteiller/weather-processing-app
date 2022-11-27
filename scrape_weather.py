@@ -102,8 +102,3 @@ class WeatherScraper:
         except Exception as e:
             print("Error", e)
             log.error("Error", e)
-
-# Testing things
-test = WeatherScraper()
-test.scrape()
-test.print_weather_data()
