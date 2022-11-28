@@ -53,14 +53,13 @@ class DbOperations:
         try:
             if self.connection is not None:
                 for k, v in weather_data.items():
-                    if 'LegendMM' != v['Min'] or 'LegendMM' != v['Max'] or 'LegendMM' != v['Mean']:
-                        min = float(v['Min'])
-                        max = float(v['Max'])
-                        avg = float(v['Mean'])
-                        query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
+                    min = float(v['Min'])
+                    max = float(v['Max'])
+                    avg = float(v['Mean'])
+                    query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
 
-                        self.connection.execute(query)
-                        self.connection.commit()
+                    self.connection.execute(query)
+                    self.connection.commit()
                 print("Added data successfully.")
                 log.info("Added data successfully.")
 
