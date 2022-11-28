@@ -36,7 +36,7 @@ class WeatherScraper:
                 log.info(f"Scraping weather data for: {self.year}-{self.month}")
 
                 try:
-                    if "We're sorry we were unable to satisfy your request." not in soup.find('p').text:
+                    if "unable to satisfy your request." not in soup.find('p').text:
                         for row in soup.find('table').find_all("tr")[1:-4]:
                             key = ""
                             daily_temp = {}
@@ -48,7 +48,7 @@ class WeatherScraper:
                             for index, item in enumerate(row.find_all("td")[0:3]):
                                 conditions = ["Max", "Min", "Mean"]
 
-                                if item.text.strip() and item.name == "td":
+                                if item.text.strip() and item.name == "td" and item.text != "LegendMM":
                                     daily_temp[conditions[index]] = item.text.strip()
                                     self.weather[key] = daily_temp
                 except Exception as e:
