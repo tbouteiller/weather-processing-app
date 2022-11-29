@@ -3,6 +3,8 @@ import sqlite3
 from datetime import datetime
 import os
 import logging
+import html
+import json
 
 log = logging.getLogger(__name__)
 
@@ -41,12 +43,12 @@ class DbOperations:
                                             min_temp real not null,
                                             max_temp real not null,
                                             avg_temp real not null);""")
-                log.warning("Table created successfully.")
+                log.info("Table created successfully.")
                 self.connection.commit()
 
         except Exception as e:
             print("Table already exists.")
-            log.info("Table already exists.")
+            log.warning("Table already exists.")
 
     def save_data(self, weather_data):
         '''Saves all data from the weather table and prints each row.'''
@@ -56,10 +58,15 @@ class DbOperations:
                     min = float(v['Min'])
                     max = float(v['Max'])
                     avg = float(v['Mean'])
-                    query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
+
+                    query = '''insert into weather (html.escape(sample_date),
+                    html.escape(location), html.escape(min_temp),
+                    html.escape(max_temp), html.escape(avg_temp))
+                    values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'''
 
                     self.connection.execute(query)
                     self.connection.commit()
+
                 print("Added data successfully.")
                 log.info("Added data successfully.")
 
@@ -77,7 +84,7 @@ class DbOperations:
                 """)
                 self.connection.commit()
                 print("Data has been purged successfully.")
-                log.info("Data has been purged successfully.")
+                log.warning("Data has been purged successfully.")
 
         except Exception as e:
             print("Error", e)
@@ -85,6 +92,21 @@ class DbOperations:
 
     def fetch_data(self):
         '''Fetches all data rows from the weather dictionary.'''
+        try:
+            if self.connection is not None:
+                rows = self.connection.cursor().execute("select * from weather").fetchall()
+                for row in rows:
+                    print(row)
+                    log.info(row)
+        except Exception as e:
+            print("Error:", e)
+            log.error("Error:", e)
+
+    def fetch_all_year(self, year1, year2):
+        '''
+        Fetches all data rows in the weather dictionary in the
+        date range provided.
+        '''
         try:
             if self.connection is not None:
                 rows = self.connection.cursor().execute("select * from weather").fetchall()

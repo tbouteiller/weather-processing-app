@@ -1,5 +1,7 @@
 from scrape_weather import WeatherScraper
 from db_operations import DbOperations
+from plot_operations import PlotOperations #
+
 import logging
 from appdirs import *
 import os
@@ -43,12 +45,14 @@ except Exception as e:
     print("Error creating log file: ", e)
 
 #Test output
-test = WeatherScraper()
+w = WeatherScraper()
 db = DbOperations()
+pt = PlotOperations()
 
-test.scrape()
+w.scrape()
 db.initalize_db()
 db.purge_data()
-db.save_data(test.weather)
+db.save_data(w.weather)
 db.fetch_data()
 
+pt.basic_bloxplot(2022, 2020)
