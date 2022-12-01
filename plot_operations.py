@@ -1,5 +1,6 @@
 import logging
 import matplotlib.pyplot as plt
+import calendar
 
 from db_operations import DbOperations
 
@@ -22,34 +23,15 @@ class PlotOperations:
         #self.plt.tick_params(axis='x', which='major', labelsize=5)
         return "Not implemented yet"
 
-    def lineplot(self, db, year:int, month:int):
+    def lineplot(self, db, year:str, month:str):
         data = []
-        date = f"{year}-{month}-01"
 
-        if(month == "01"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "02"):
-            date_range = f"{year}-{month}-28"
-        elif(month == "03"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "04"):
-            date_range = f"{year}-{month}-30"
-        elif(month == "05"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "06"):
-            date_range = f"{year}-{month}-30"
-        elif(month == "07"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "08"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "09"):
-            date_range = f"{year}-{month}-30"
-        elif(month == "10"):
-            date_range = f"{year}-{month}-31"
-        elif(month == "11"):
-            date_range = f"{year}-{month}-30"
-        elif(month == "12"):
-            date_range = f"{year}-{month}-31"
+        if '0' in month and "10" != month:
+            new_month = str(month).replace("0","")
+        new_month = int(month)
+
+        date = f"{year}-{month}-01"
+        date_range = f"{year}-{month}-{calendar.monthrange(int(year), new_month)[1]}"
 
         data = db.fetch_all_months(date, date_range)
 
