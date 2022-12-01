@@ -17,11 +17,13 @@ class PlotOperations:
         self.date = []
 
     def basic_boxplot(self, db, year1:int, year2:int):
-        #self.plt.boxplot(self.date, [self.min_temp, self.max_temp, self.avg_temp])
-        #self.plt.yticks(range(0, 100, 1))
-        #self.plt.tight_layout()
-        #self.plt.tick_params(axis='x', which='major', labelsize=5)
-        return "Not implemented yet"
+        '''Creates a boxplot of mean temperatures for all months between two specified years.'''
+        box_data = db.fetch_all_years(year2, year1)
+        labels, data = [*zip(*box_data.items())]
+
+        plt.boxplot(data)
+        plt.xticks(range(1, len(labels) + 1), labels)
+        plt.show()
 
     def lineplot(self, db, year:str, month:str):
         data = []

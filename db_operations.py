@@ -1,10 +1,13 @@
 '''This module represents the database and the corresponding operations.'''
 import sqlite3
 from datetime import datetime
+import datetime
 import os
 import logging
 import html
 import json
+import calendar
+
 
 log = logging.getLogger(__name__)
 
@@ -101,14 +104,26 @@ class DbOperations:
         Fetches all data rows in the weather dictionary in the
         date range provided.
         '''
-        try:
-            data = []
+        try:  
             if self.connection is not None:
+                avg = {"01": [], "02": [], "03": [], "04": [], "05": [], "06": [], "07": [], "08": [], "09": [], "10": [], "11": [], "12": []}
+                
+                if year2 == datetime.date.today().year:
+                    month = datetime.date.today().month
+                else:
+                    month = 12
+               
+                year2 = f"{year2}-{str(month)}-{calendar.monthrange(int(year2), month)[1]}"
+                year1 = f"{year1}-01-{calendar.monthrange(int(year1), 1)[1]}"
                 rows = self.connection.cursor().execute(f"select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (year2, year1)).fetchall()
+    
                 for value in rows:
-                    data.append(value)
+                    month = value[1].split("-")[1]
+                    avg[month] += [value[5]]
                     log.info(rows)
-                return data
+            
+                print(avg)
+                return avg
         except Exception as e:
             print("Error:", e)
             log.error("Error:", e)
