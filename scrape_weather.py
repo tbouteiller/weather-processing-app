@@ -75,6 +75,8 @@ class WeatherScraper:
                 self.year =  self.url[self.url.index("&Year=") + 6: self.url.index("&M")]
                 self.month = self.url[self.url.index("Month=") + 6:]
                 self.previous_month = True
+                if(len(self.month) == 1):
+                    self.month = "0" + self.month
             else:
                 self.previous_month = False
         except Exception as e:

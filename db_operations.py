@@ -38,7 +38,7 @@ class DbOperations:
                 self.connection.cursor()
                 self.connection.execute("""create table weather
                                             (id integer primary key autoincrement not null,
-                                            sample_date text not null unique,
+                                            sample_date date not null unique,
                                             location text not null,
                                             min_temp real not null,
                                             max_temp real not null,
@@ -59,10 +59,7 @@ class DbOperations:
                     max = float(v['Max'])
                     avg = float(v['Mean'])
 
-                    query = '''insert into weather (html.escape(sample_date),
-                    html.escape(location), html.escape(min_temp),
-                    html.escape(max_temp), html.escape(avg_temp))
-                    values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'''
+                    query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
 
                     self.connection.execute(query)
                     self.connection.commit()
@@ -78,10 +75,7 @@ class DbOperations:
         '''Deletes all records from the weather table.'''
         try:
             if self.connection is not None:
-                self.connection.executescript("""
-                    delete from weather;
-                    delete from sqlite_sequence where name = 'weather';
-                """)
+                self.connection.executescript("""delete from weather;delete from sqlite_sequence where name = 'weather';""")
                 self.connection.commit()
                 print("Data has been purged successfully.")
                 log.warning("Data has been purged successfully.")
@@ -102,17 +96,37 @@ class DbOperations:
             print("Error:", e)
             log.error("Error:", e)
 
-    def fetch_all_year(self, year1, year2):
+    def fetch_all_years(self, year1, year2):
         '''
         Fetches all data rows in the weather dictionary in the
         date range provided.
         '''
         try:
+            data = []
             if self.connection is not None:
-                rows = self.connection.cursor().execute("select * from weather").fetchall()
-                for row in rows:
-                    print(row)
-                    log.info(row)
+                rows = self.connection.cursor().execute(f"select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (year2, year1)).fetchall()
+                for value in rows:
+                    data.append(value)
+                    log.info(rows)
+                return data
+        except Exception as e:
+            print("Error:", e)
+            log.error("Error:", e)
+
+    def fetch_all_months(self, date:str, date_range:str):
+        '''
+        Fetches all data rows in the weather dictionary in the
+        date range provided.
+        '''
+        try:
+            data = []
+            if self.connection is not None:
+                rows = self.connection.cursor().execute("select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (date_range, date)).fetchall()
+                for value in rows:
+                    data.append(value)
+                    print(value)
+                    log.info(value)
+                return data
         except Exception as e:
             print("Error:", e)
             log.error("Error:", e)
