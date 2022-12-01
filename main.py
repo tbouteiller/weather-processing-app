@@ -55,6 +55,6 @@ db.initalize_db()
 db.purge_data()
 db.save_data(w.weather)
 
-#db.fetch_data()
+db.fetch_data()
 #pt.basic_boxplot(db, 2021, 2022)
 pt.lineplot(db, "2022", "01")
