@@ -47,8 +47,8 @@ class WeatherScraper:
 
                             for index, item in enumerate(row.find_all("td")[0:3]):
                                 conditions = ["Max", "Min", "Mean"]
-
-                                if item.text.strip() and item.name == "td" and "Legend" not in item.text:
+ 
+                                if item.text.strip() and item.name == "td" and "LEGEND" not in item.text.upper():
                                     daily_temp[conditions[index]] = item.text.strip()
                                     self.weather[key] = daily_temp
                 except Exception as e:

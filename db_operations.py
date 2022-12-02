@@ -53,18 +53,23 @@ class DbOperations:
             print("Table already exists.")
             log.warning("Table already exists.")
 
-    def save_data(self, weather_data):
+    def save_data(self, weather_data:dict):
         '''Saves all data from the weather table and prints each row.'''
         try:
             if self.connection is not None:
                 for k, v in weather_data.items():
-                    min = float(v['Min'])
-                    max = float(v['Max'])
-                    avg = float(v['Mean'])
+                    
+                    try:
+                        min = float(v['Min'])
+                        max = float(v['Max'])                      
+                        avg = float(v['Mean'])
+                    except KeyError:
+                        min = 0.0
+                        max = 0.0
+                        avg = 0.0
 
-                    query = 'insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values ("' + k + '",' + f'"Winnipeg", {min}, {max}, {avg})'
-
-                    self.connection.execute(query)
+                    query = """insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values (?, ?, ?, ?, ?);"""
+                    self.connection.execute(query, (k, "Winnipeg", min, max, avg))
                     self.connection.commit()
 
                 print("Added data successfully.")
@@ -122,7 +127,6 @@ class DbOperations:
                     avg[month] += [value[5]]
                     log.info(rows)
             
-                print(avg)
                 return avg
         except Exception as e:
             print("Error:", e)
@@ -139,7 +143,6 @@ class DbOperations:
                 rows = self.connection.cursor().execute("select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (date_range, date)).fetchall()
                 for value in rows:
                     data.append(value)
-                    print(value)
                     log.info(value)
                 return data
         except Exception as e:

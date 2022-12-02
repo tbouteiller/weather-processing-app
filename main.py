@@ -50,12 +50,10 @@ db = DbOperations()
 pt = PlotOperations()
 
 w.scrape()
-
 db.initalize_db()
 db.purge_data()
 db.save_data(w.weather)
-
 # db.fetch_data()
-# test = db.fetch_all_years("2021", "2022")
-pt.basic_boxplot(db, 2022, 2021)
-# pt.lineplot(db, "2022", "01")
+
+pt.basic_boxplot(db, 2021, 2020)
+pt.lineplot(db, "2021", "01")
