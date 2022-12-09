@@ -1,4 +1,7 @@
-'''This module will scrape the weather data from the GC climate weather website.'''
+'''
+This module will scrape the weather data
+from the GC climate weather website.
+'''
 from bs4 import BeautifulSoup
 from datetime import date
 import requests
@@ -10,19 +13,24 @@ log = logging.getLogger(__name__)
 
 class WeatherScraper:
     '''A class which scrapes weather data using Beautiful Soup and stores data within a weather dictionary.'''
+
     def __init__(self) -> None:
+
         self.weather = {}
         self.month = date.today().month
-        self.year =  date.today().year
+        self.year = date.today().year
         self.url = f"https://climate.weather.gc.ca/climate_data/daily_data_e.html?StationID=27174&timeframe=2&StartYear=1840&EndYear=2018&Day=1&Year={self.year}&Month={self.month}#"
         self.previous_month = True
 
     def scrape(self):
-        '''Scrapes the weather data by targeting the daily Max, Min, and Mean temperatures for each month.'''
+        '''
+        Scrapes the weather data by targeting the daily Max, Min
+        and Mean temperatures for each month.
+        '''
         session = self.set_session()
 
         try:
-            #input("Press enter to begin or end scraping with CTR+C:")
+            # input("Press enter to begin or end scraping with CTR+C:")
             while self.previous_month is True:
                 try:
                     soup = BeautifulSoup(session.get(self.url).content, 'html.parser')
@@ -51,6 +59,7 @@ class WeatherScraper:
                                 if item.text.strip() and item.name == "td" and "LEGEND" not in item.text.upper():
                                     daily_temp[conditions[index]] = item.text.strip()
                                     self.weather[key] = daily_temp
+
                 except Exception as e:
                     print("Error", e)
                     log.error("Error", e)
@@ -66,13 +75,16 @@ class WeatherScraper:
             log.error("Error:", e)
 
     def check_for_previous_month(self, soup):
-        '''Checks if data for previous month is available. Will update the url and rerun the soup if true.'''
+        '''
+        Checks if data for previous month is available.
+        Will update the url and rerun the soup if true.
+        '''
         try:
             address = soup.find(rel="prev", href=True)
 
             if address and not soup.find("li", {"class": "previous disabled"}):
                 self.url = f'https://climate.weather.gc.ca{address.get("href")}'
-                self.year =  self.url[self.url.index("&Year=") + 6: self.url.index("&M")]
+                self.year = self.url[self.url.index("&Year=") + 6: self.url.index("&M")]
                 self.month = self.url[self.url.index("Month=") + 6:]
                 self.previous_month = True
                 if(len(self.month) == 1):
@@ -93,7 +105,10 @@ class WeatherScraper:
             log.error("Error:", e)
 
     def set_session(self):
-        '''Creates a session to wrap request calls to account for request failures or request limits.'''
+        '''
+        Creates a session to wrap request calls to account
+        for request failures or request limits.
+        '''
         try:
             session = requests.Session()
             retry = Retry(connect=3, backoff_factor=1)

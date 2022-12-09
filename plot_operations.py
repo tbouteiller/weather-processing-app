@@ -2,9 +2,8 @@ import logging
 import matplotlib.pyplot as plt
 import calendar
 
-from db_operations import DbOperations
-
 log = logging.getLogger(__name__)
+
 
 class PlotOperations:
 
@@ -16,8 +15,11 @@ class PlotOperations:
         self.avg_temp = []
         self.date = []
 
-    def basic_boxplot(self, db, year1:int, year2:int):
-        '''Creates a boxplot of mean temperatures for all months between two specified years.'''
+    def basic_boxplot(self, db, year1: int, year2: int):
+        '''
+        Creates a boxplot of mean temperatures for all months
+        between two specified years.
+        '''
         box_data = db.fetch_all_years(year2, year1)
         labels, data = [*zip(*box_data.items())]
 
@@ -25,11 +27,11 @@ class PlotOperations:
         plt.xticks(range(1, len(labels) + 1), labels)
         plt.show()
 
-    def lineplot(self, db, year:str, month:str):
+    def lineplot(self, db, year: str, month: str):
         data = []
 
         if '0' in month and "10" != month:
-            new_month = str(month).replace("0","")
+            new_month = str(month).replace("0", "")
         new_month = int(month)
 
         date = f"{year}-{month}-01"
@@ -39,13 +41,13 @@ class PlotOperations:
 
         self.plt.title("Weather.gc.ca basic boxplot")
         self.plt.xlabel("Date")
-        self.plt.xticks(rotation=45, ha='right', fontsize = 12)
+        self.plt.xticks(rotation=45, ha='right', fontsize=12)
 
         for i in data:
             self.date.append(i[1])
             self.avg_temp.append(i[5])
 
-        self.plt.plot(self.date, self.avg_temp,'-.', label='Average Temp')
+        self.plt.plot(self.date, self.avg_temp, '-.', label='Average Temp')
 
         self.plt.legend()
         self.plt.show()

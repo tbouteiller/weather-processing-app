@@ -8,8 +8,6 @@ from plot_operations import PlotOperations
 import logging
 from appdirs import *
 import os
-import time
-import getpass
 
 class weather_processor():
 

@@ -1,13 +1,8 @@
 '''This module represents the database and the corresponding operations.'''
 import sqlite3
-from datetime import datetime
 import datetime
-import os
 import logging
-import html
-import json
 import calendar
-
 
 log = logging.getLogger(__name__)
 
@@ -50,18 +45,18 @@ class DbOperations:
                 self.connection.commit()
 
         except Exception as e:
-            print("Table already exists.")
-            log.warning("Table already exists.")
+            print("Table already exists.", e)
+            log.warning("Table already exists.", e)
 
-    def save_data(self, weather_data:dict):
+    def save_data(self, weather_data: dict):
         '''Saves all data from the weather table and prints each row.'''
         try:
             if self.connection is not None:
                 for k, v in weather_data.items():
-                    
+
                     try:
                         min = float(v['Min'])
-                        max = float(v['Max'])                      
+                        max = float(v['Max'])
                         avg = float(v['Mean'])
                     except KeyError:
                         min = 0.0
@@ -69,21 +64,23 @@ class DbOperations:
                         avg = 0.0
 
                     query = """insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values (?, ?, ?, ?, ?);"""
-                    self.connection.execute(query, (k, "Winnipeg", min, max, avg))
+                    self.connection.execute(
+                        query, (k, "Winnipeg", min, max, avg))
                     self.connection.commit()
 
                 print("Added data successfully.")
                 log.info("Added data successfully.")
 
         except Exception as e:
-            print("Error:",e)
-            log.error("Error:",e)
+            print("Error:", e)
+            log.error("Error:", e)
 
     def purge_data(self):
         '''Deletes all records from the weather table.'''
         try:
             if self.connection is not None:
-                self.connection.executescript("""delete from weather;delete from sqlite_sequence where name = 'weather';""")
+                self.connection.executescript(
+                    """delete from weather;delete from sqlite_sequence where name = 'weather';""")
                 self.connection.commit()
                 print("Data has been purged successfully.")
                 log.warning("Data has been purged successfully.")
@@ -109,30 +106,44 @@ class DbOperations:
         Fetches all data rows in the weather dictionary in the
         date range provided.
         '''
-        try:  
+        try:
             if self.connection is not None:
-                avg = {"01": [], "02": [], "03": [], "04": [], "05": [], "06": [], "07": [], "08": [], "09": [], "10": [], "11": [], "12": []}
-                
+                avg = {
+                    "01": [],
+                    "02": [],
+                    "03": [],
+                    "04": [],
+                    "05": [],
+                    "06": [],
+                    "07": [],
+                    "08": [],
+                    "09": [],
+                    "10": [],
+                    "11": [],
+                    "12": []}
+
                 if year2 == datetime.date.today().year:
                     month = datetime.date.today().month
                 else:
                     month = 12
-               
+
                 year2 = f"{year2}-{str(month)}-{calendar.monthrange(int(year2), month)[1]}"
                 year1 = f"{year1}-01-{calendar.monthrange(int(year1), 1)[1]}"
-                rows = self.connection.cursor().execute(f"select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (year2, year1)).fetchall()
-    
+                rows = self.connection.cursor().execute(
+                    "select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id",
+                    (year2, year1)).fetchall()
+
                 for value in rows:
                     month = value[1].split("-")[1]
                     avg[month] += [value[5]]
                     log.info(rows)
-            
+
                 return avg
         except Exception as e:
             print("Error:", e)
             log.error("Error:", e)
 
-    def fetch_all_months(self, date:str, date_range:str):
+    def fetch_all_months(self, date: str, date_range: str):
         '''
         Fetches all data rows in the weather dictionary in the
         date range provided.
@@ -140,7 +151,9 @@ class DbOperations:
         try:
             data = []
             if self.connection is not None:
-                rows = self.connection.cursor().execute("select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id", (date_range, date)).fetchall()
+                rows = self.connection.cursor().execute(
+                    "select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id",
+                    (date_range, date)).fetchall()
                 for value in rows:
                     data.append(value)
                     log.info(value)
