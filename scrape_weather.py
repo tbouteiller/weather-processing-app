@@ -22,7 +22,7 @@ class WeatherScraper:
         session = self.set_session()
 
         try:
-            input("Press enter to begin or end scraping with CTR+C:")
+            #input("Press enter to begin or end scraping with CTR+C:")
             while self.previous_month is True:
                 try:
                     soup = BeautifulSoup(session.get(self.url).content, 'html.parser')
@@ -47,7 +47,7 @@ class WeatherScraper:
 
                             for index, item in enumerate(row.find_all("td")[0:3]):
                                 conditions = ["Max", "Min", "Mean"]
- 
+
                                 if item.text.strip() and item.name == "td" and "LEGEND" not in item.text.upper():
                                     daily_temp[conditions[index]] = item.text.strip()
                                     self.weather[key] = daily_temp
