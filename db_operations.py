@@ -7,7 +7,10 @@ import calendar
 log = logging.getLogger(__name__)
 
 class DbOperations:
-    '''This class represents the weather sqlite database and contains various methods that run queries.'''
+    '''
+    This class represents the weather sqlite database
+    and contains various methods that run queries.
+    '''
 
     def __init__(self):
         '''Class constructor which trys to establish a connection when initalzied.'''
@@ -45,27 +48,27 @@ class DbOperations:
                 self.connection.commit()
 
         except Exception as e:
-            print("Table already exists.", e)
+            print("Table already exists.")
             log.warning("Table already exists.", e)
 
     def save_data(self, weather_data: dict):
         '''Saves all data from the weather table and prints each row.'''
         try:
             if self.connection is not None:
-                for k, v in weather_data.items():
+                for k,value in weather_data.items():
 
                     try:
-                        min = float(v['Min'])
-                        max = float(v['Max'])
-                        avg = float(v['Mean'])
+                        minimum = float(value['Min'])
+                        maximum = float(value['Max'])
+                        average = float(value['Mean'])
                     except KeyError:
-                        min = 0.0
-                        max = 0.0
-                        avg = 0.0
+                        minimum = 0.0
+                        maximum = 0.0
+                        average = 0.0
 
                     query = """insert into weather (sample_date, location, min_temp, max_temp, avg_temp) values (?, ?, ?, ?, ?);"""
                     self.connection.execute(
-                        query, (k, "Winnipeg", min, max, avg))
+                        query, (k, "Winnipeg", minimum, maximum, average))
                     self.connection.commit()
 
                 print("Added data successfully.")
@@ -139,6 +142,7 @@ class DbOperations:
                     log.info(rows)
 
                 return avg
+
         except Exception as e:
             print("Error:", e)
             log.error("Error:", e)

@@ -1,11 +1,19 @@
+'''
+This file is responsible for containing the PlotOperations class,
+which creates graphs for the user's temperature data.
+'''
+import calendar
 import logging
 import matplotlib.pyplot as plt
-import calendar
 
 log = logging.getLogger(__name__)
 
 
 class PlotOperations:
+    '''
+    This class is responsible for creating the boxplot
+    and lineplot of the user's temperature data.
+    '''
 
     def __init__(self):
         self.plt = plt
@@ -28,6 +36,10 @@ class PlotOperations:
         plt.show()
 
     def lineplot(self, db, year: str, month: str):
+        '''
+        Creates a lineplot of temperatures for all months
+        in the year.
+        '''
         data = []
 
         if '0' in month and "10" != month:

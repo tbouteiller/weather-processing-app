@@ -2,17 +2,20 @@
 This module will scrape the weather data
 from the GC climate weather website.
 '''
-from bs4 import BeautifulSoup
 from datetime import date
+import logging
+from bs4 import BeautifulSoup
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import logging
 
 log = logging.getLogger(__name__)
 
 class WeatherScraper:
-    '''A class which scrapes weather data using Beautiful Soup and stores data within a weather dictionary.'''
+    '''
+    A class which scrapes weather data using Beautiful Soup
+    and stores data within a weather dictionary.
+    '''
 
     def __init__(self) -> None:
 
@@ -30,7 +33,6 @@ class WeatherScraper:
         session = self.set_session()
 
         try:
-            # input("Press enter to begin or end scraping with CTR+C:")
             while self.previous_month is True:
                 try:
                     soup = BeautifulSoup(session.get(self.url).content, 'html.parser')
