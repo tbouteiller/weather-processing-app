@@ -23,8 +23,8 @@ class DbOperations:
                 print("Connection successful.")
                 log.info("Connection successful.")
             except Exception as e:
-                print("Error connecting to database: ", e)
-                log.error("Error connecting to database: ", e)
+                print("Error connecting to database: ")
+                log.error("Error connecting to database: ")
 
     def __del__(self):
         '''Destructor used to dispose of connection.'''
@@ -49,7 +49,7 @@ class DbOperations:
 
         except Exception as e:
             print("Table already exists.")
-            log.warning("Table already exists.", e)
+            log.warning("Table already exists.")
 
     def save_data(self, weather_data: dict):
         '''Saves all data from the weather table and prints each row.'''
@@ -82,8 +82,7 @@ class DbOperations:
         '''Deletes all records from the weather table.'''
         try:
             if self.connection is not None:
-                self.connection.executescript(
-                    """delete from weather;delete from sqlite_sequence where name = 'weather';""")
+                self.connection.executescript("delete from weather;delete from sqlite_sequence where name = 'weather';")
                 self.connection.commit()
                 print("Data has been purged successfully.")
                 log.warning("Data has been purged successfully.")

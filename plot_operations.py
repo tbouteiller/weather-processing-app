@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 
 log = logging.getLogger(__name__)
 
-
 class PlotOperations:
     '''
     This class is responsible for creating the boxplot

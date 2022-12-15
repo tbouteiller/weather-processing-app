@@ -30,34 +30,16 @@ class WeatherProcessor():
         """
         try:
             if os.name == "posix":
-                if not os.path.exists(user_log_dir(self.appname, self.appauthor)):
-                    unix_log_dir = user_log_dir(self.appname, self.appauthor)
-                    os.makedirs(unix_log_dir)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{unix_log_dir}/info.log",
-                                        level=logging.INFO)
-                else:
-                    unix_log_dir = user_log_dir(self.appname, self.appauthor)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{unix_log_dir}/info.log",
-                                        level=logging.INFO)
+                logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
+                                    datefmt="(%a)%d/%m/%Y %H:%M:%S",
+                                    filename=f"{unix_log_dir}/info.log",
+                                    level=logging.INFO)
 
             else:
-                if not os.path.exists(user_log_dir(self.appname, self.appauthor)):
-                    windows_log_dir = user_log_dir(self.appname, self.appauthor)
-                    os.makedirs(windows_log_dir)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename="f{windows_log_dir}\\info.log",
-                                        level=logging.INFO)
-                else:
-                    windows_log_dir = user_log_dir(self.appname, self.appauthor)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{windows_log_dir}\\info.log",
-                                        level=logging.INFO)
+                logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
+                                    datefmt="(%a)%d/%m/%Y %H:%M:%S",
+                                    filename="info.log",
+                                    level=logging.INFO)
         except Exception as e:
             print("Error creating log file: ", e)
 
