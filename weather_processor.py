@@ -1,5 +1,6 @@
 """
 Class that contains UI code for weather-processing-app
+Created by: David & Tanner
 """
 import logging
 import os
