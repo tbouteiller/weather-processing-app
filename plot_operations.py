@@ -1,6 +1,7 @@
 '''
 This file is responsible for containing the PlotOperations class,
 which creates graphs for the user's temperature data.
+Created by: David & Tanner
 '''
 import calendar
 import logging

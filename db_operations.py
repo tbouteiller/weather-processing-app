@@ -1,4 +1,7 @@
-'''This module represents the database and the corresponding operations.'''
+'''
+This module represents the database and the corresponding operations.
+Created by: David & Tanner
+'''
 import sqlite3
 import datetime
 import logging

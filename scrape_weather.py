@@ -1,6 +1,7 @@
 '''
 This module will scrape the weather data
 from the GC climate weather website.
+Created by: David & Tanner
 '''
 from datetime import date
 import logging
