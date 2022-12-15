@@ -1,18 +1,19 @@
 """
 Class that contains UI code for weather-processing-app
 """
+import logging
+import os
+from appdirs import *
+
 from scrape_weather import WeatherScraper
 from db_operations import DbOperations
 from plot_operations import PlotOperations
 
-import logging
-from appdirs import *
-import os
-import time
-import getpass
 
-class weather_processor():
-
+class WeatherProcessor():
+    """
+    A class to control all UI elements.
+    """
     def __init__(self):
         self.w = WeatherScraper()
         self.db = DbOperations()
@@ -23,43 +24,35 @@ class weather_processor():
 
 
     def logging_init(self):
+        """
+        Sets up the logging for the rest of the program, setting log files
+        to end up in either
+        """
         try:
             if os.name == "posix":
-                if not os.path.exists(user_log_dir(self.appname, self.appauthor)):
-                    unix_log_dir = user_log_dir(self.appname, self.appauthor)
-                    os.makedirs(unix_log_dir)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{unix_log_dir}/info.log",
-                                        level=logging.INFO)
-                else:
-                    unix_log_dir = user_log_dir(self.appname, self.appauthor)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{unix_log_dir}/info.log",
-                                        level=logging.INFO)
+                logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
+                                    datefmt="(%a)%d/%m/%Y %H:%M:%S",
+                                    filename=f"{unix_log_dir}/info.log",
+                                    level=logging.INFO)
 
             else:
-                if not os.path.exists(user_log_dir(self.appname, self.appauthor)):
-                    windows_log_dir = user_log_dir(self.appname, self.appauthor)
-                    os.makedirs(windows_log_dir)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename="f{windows_log_dir}\\info.log",
-                                        level=logging.INFO)
-                else:
-                    windows_log_dir = user_log_dir(self.appname, self.appauthor)
-                    logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
-                                        datefmt="(%a)%d/%m/%Y %H:%M:%S",
-                                        filename=f"{windows_log_dir}\\info.log",
-                                        level=logging.INFO)
+                logging.basicConfig(format="%(levelname)s %(asctime)s: %(message)s",
+                                    datefmt="(%a)%d/%m/%Y %H:%M:%S",
+                                    filename="info.log",
+                                    level=logging.INFO)
         except Exception as e:
             print("Error creating log file: ", e)
 
     def db_init(self):
+        """
+        Initializes the DB.
+        """
         self.db.initalize_db()
 
     def ui_init(self):
+        """
+        Holds the main terminal UI loop.
+        """
         print("Welcome to the weather-processing-app \o.o/")
         user_input = ""
 
@@ -91,7 +84,7 @@ class weather_processor():
                 self.pt.lineplot(self.db, year, month)
 
 if __name__ == "__main__":
-    weather = weather_processor()
+    weather = WeatherProcessor()
 
     weather.logging_init()
     weather.db_init()
