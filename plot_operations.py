@@ -31,6 +31,9 @@ class PlotOperations:
         box_data = db.fetch_all_years(year2, year1)
         labels, data = [*zip(*box_data.items())]
 
+        plt.title(f"Monthly Temperature for: {year1} to {year2}")
+        plt.xlabel("Month")
+        plt.ylabel("Temperature (C)")
         plt.boxplot(data)
         plt.xticks(range(1, len(labels) + 1), labels)
         plt.show()
@@ -53,7 +56,9 @@ class PlotOperations:
 
         self.plt.title("Weather.gc.ca basic boxplot")
         self.plt.xlabel("Date")
-        self.plt.xticks(rotation=45, ha='right', fontsize=12)
+        self.plt.ylabel("Avg Daily Temp")
+        plt.subplots_adjust(bottom=0.15)
+        self.plt.xticks(rotation=45, ha='right', fontsize=8)
 
         for i in data:
             self.date.append(i[1])
