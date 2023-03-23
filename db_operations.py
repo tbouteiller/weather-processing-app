@@ -161,8 +161,12 @@ class DbOperations:
                     "select * from weather WHERE sample_date <= ? AND sample_date >= ? ORDER BY id",
                     (date_range, date)).fetchall()
                 for value in rows:
-                    data.append(value)
-                    log.info(value)
+                     if value is not None:
+                        data.append(value)
+                        log.info(value)
+                    else:
+                        log.info("Found current date / null data - Substituting for 0's", value)
+                        data.append(0)
                 return data
         except Exception as e:
             print("Error:", e)
