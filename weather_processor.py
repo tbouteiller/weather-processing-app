@@ -76,8 +76,8 @@ class WeatherProcessor():
             elif user_input == "P".upper():
                 self.db.purge_data()
             elif user_input == "B".upper():
-                year1 = input("\nPlease enter the start year:")
-                year2 = input("\nPlease enter the end year:")
+                year2 = input("\nPlease enter the start year:")
+                year1 = input("\nPlease enter the end year:")
                 self.pt.basic_boxplot(self.db, year1, year2)
             elif user_input == "L".upper():
                 year = input("\nPlease enter the year:")
